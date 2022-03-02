@@ -57,6 +57,14 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install golang-go \
    && go get github.com/mailhog/mhsendmail
 
 ADD .docker/config/php.ini /usr/local/etc/php/php.ini
+ADD .docker/config/000-default.conf /etc/apache2/sites-available/000-default.conf
+
+RUN chmod 777 -Rf /var/www /var/www/.* \
+	&& chown -Rf www-data:www-data /var/www /var/www/.* \
+	&& usermod -u 1000 www-data \
+	&& chsh -s /bin/bash www-data\
+	&& a2enmod rewrite \
+	&& a2enmod headers
 
 VOLUME /var/www/html
 WORKDIR /var/www/html
