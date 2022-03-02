@@ -1,0 +1,39 @@
+version: "3"
+services:
+  web: 
+    build: .
+    image: webserver/csvitor:1.0
+    container_name: "web7-3"
+    ports: 
+      - "80:80"
+    links: 
+      - "db"
+    volumes: 
+      - "./src:/var/www/html"
+  db:
+    image: mysql:8.0.19
+    container_name: "db-8"
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - '3307:3306'
+    volumes: 
+      - "./database:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: 'magento'
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: "phpmyadmin-l"
+    links:
+        - "db"
+    ports:
+        - 8080:80
+    environment:
+        - PMA_ARBITRARY=1
+  mailhog:
+    image: mailhog/mailhog
+    container_name: "mailhog-l"
+    ports:
+      - 1025:1025
+      - 8025:8025
