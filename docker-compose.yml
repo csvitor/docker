@@ -10,6 +10,16 @@ services:
       - "db"
     volumes: 
       - "./src:/var/www/html"
+   environment:
+    - DOCKER_PHP_MEMORY_LIMIT=2048M
+    - DOCKER_PHP_MAX_EXECUTION_TIME=38000
+    - DOCKER_PHP_DATA_TIMEZONE=UTC
+    - DOCKER_PHP_UPLOAD_FILESIZE=128M
+    - DOCKER_PHP_ALWAYS_POPULATE_RAW_POST_DATA=-1
+    - DOCKER_PHP_ZLIB_OUTPUT_COMPRESSION=on
+    - DOCKER_PHP_LOG_ERRORS=On
+    - DOCKER_PHP_DISPLAY_ERRORS=On
+    - DOCKER_PHP_SENDMAIL_PATH=/opt/go/bin/mhsendmail --smtp-addr='mailhog:1025'
   db:
     image: mysql:8.0.19
     container_name: "db-8"
