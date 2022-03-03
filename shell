@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker exec -it web7-3 bash
+docker exec -it --user www-data web-csvitor bash
