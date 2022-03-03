@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 docker-compose up -d && \
 
-Created by Vitor Costa
+echo "Created by Vitor Costa
 links:
 
 🌎 Web server: http://localhost/
 ⚙️ PHPMyAdmin: http://localhost:8080
-✉️ Local emails: http://localhost:8025
+✉️ Local emails: http://localhost:8025"
 
