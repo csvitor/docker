@@ -2,18 +2,11 @@ FROM php:7.3-apache
 
 MAINTAINER Vitor Costa <developer.vitorcosta5566@gmail.com>
 
-# dependence 
-RUN apt-get update -y \
-	&& apt-get install git -yqq \
-	&& apt-get install mariadb-client -yqq \
-	&& apt-get install nano -yqq \
-	&& apt-get install wget -yqq \
-	&& apt-get install tar -yqq \
-	&& apt-get install cron -yqq \
-	&& apt-get install cron -yqq \
-	&& apt-get install curl -yqq \
-	&& apt-get install -yqq \
-	libxml2-dev \
+RUN apt-get update \
+	&& DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+	software-properties-common \
+	&& apt-get update \
+	&& DEBIAN_FRONTEND=noninteractive apt-get install -y \
 	libfreetype6-dev \
 	libicu-dev \
   	libssl-dev \
@@ -22,8 +15,18 @@ RUN apt-get update -y \
 	libedit-dev \
 	libedit2 \
 	libxslt1-dev \
-	libzip-dev \
+	apt-utils \
+	mariadb-client \
+	git \
+	nano \
+	wget \
+	curl \
+	unzip \
+	tar \
+	cron \
+	bash-completion \
 	&& apt-get clean
+
 
 # configure extensions
 RUN docker-php-ext-configure \
@@ -44,6 +47,7 @@ RUN apt-get update \
   	&& apt-get install libpcre3 libpcre3 -yqq \
   	# php-pear \
   	&& pecl install oauth \
+	&& echo "extension=oauth.so" > /usr/local/etc/php/conf.d/docker-php-ext-oauth.ini
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -58,7 +62,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install golang-go \
 
 #ADD .docker/config/php.ini /usr/local/etc/php/php.ini
 COPY .docker/config/php.ini /usr/local/etc/php/php.ini
-ADD .docker/config/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY .docker/config/000-default.conf /etc/apache2/sites-available/000-default.conf
+#ADD .docker/config/web.conf /etc/apache2/sites-available/web.conf
 
 RUN chmod 777 -Rf /var/www /var/www/.* \
 	&& chown -Rf www-data:www-data /var/www /var/www/.* \
