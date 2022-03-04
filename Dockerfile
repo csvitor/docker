@@ -2,11 +2,21 @@ FROM php:7.3-apache
 
 MAINTAINER Vitor Costa <developer.vitorcosta5566@gmail.com>
 
-RUN apt-get update \
+ENV URL_SITE=http://localhost
+
+RUN apt-get update -y \
+	&& apt-cache search pcre \
 	&& DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-	software-properties-common \
-	&& apt-get update \
-	&& DEBIAN_FRONTEND=noninteractive apt-get install -y \
+	git \
+	mariadb-client \
+	nano \
+	wget \
+	tar \
+	cron \
+	curl \
+	unzip \
+	&& DEBIAN_FRONTEND=noninteractive apt-get install -yqq \
+	libxml2-dev \
 	libfreetype6-dev \
 	libicu-dev \
   	libssl-dev \
@@ -15,16 +25,7 @@ RUN apt-get update \
 	libedit-dev \
 	libedit2 \
 	libxslt1-dev \
-	apt-utils \
-	mariadb-client \
-	git \
-	nano \
-	wget \
-	curl \
-	unzip \
-	tar \
-	cron \
-	bash-completion \
+	libzip-dev \
 	&& apt-get clean
 
 
@@ -44,7 +45,7 @@ RUN docker-php-ext-configure \
 
 
 RUN apt-get update \
-  	&& apt-get install libpcre3 libpcre3 -yqq \
+  	&& apt-get install libpcre3 libpcre3 libpcre3-dev -yqq \
   	# php-pear \
   	&& pecl install oauth \
 	&& echo "extension=oauth.so" > /usr/local/etc/php/conf.d/docker-php-ext-oauth.ini
@@ -71,6 +72,8 @@ RUN chmod 777 -Rf /var/www /var/www/.* \
 	&& chsh -s /bin/bash www-data\
 	&& a2enmod rewrite \
 	&& a2enmod headers
+
+
 
 VOLUME /var/www/html
 WORKDIR /var/www/html
